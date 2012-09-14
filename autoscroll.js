@@ -19,7 +19,7 @@ $(window).load(function(){
    //add a checkbox to "docs-title-outer" div
    $("div.docs-title-outer").append("<div class=\"goog-inline-block autoscroll-title\">Enable AutoScroll: <input type=\"checkbox\" name=\"cb-autoscroll\" id=\"cb-autoscroll\"/></div>");
    //now set a hook for a checkbox with id="cb-autoscroll"
-   $("#cb-autoscroll").click(autoscrollCallback);
+   $("#cb-autoscroll").click(setupAutoscroll);
 });
 
 
@@ -50,7 +50,7 @@ function getRulerHeight(){
 
 
 // auto scroll callback function for the timer
-function autoscrollCallback() {
+function setupAutoscroll() {
    //see if the box is checked, if not, do nothing, if yes, activate the peer tracker
    if($("#cb-autoscroll").is(':checked')){
       console.log("Activating auto scroll...");
@@ -59,7 +59,7 @@ function autoscrollCallback() {
          init();
       //   initialized = true;
       //}
-      activateAutoScroll();
+      startAutoscroll();
    } else {
       console.log("Deactivating auto scroll...");
       autoscrollEnabled = false;
@@ -69,7 +69,7 @@ function autoscrollCallback() {
 
 
 // Starts the auto scroll timer
-function activateAutoScroll(){
+function startAutoscroll(){
    // if this is null, show alert, uncheck the box
    if($("li.docs-user-roster").length){
       pageTimer = window.setInterval(autoScrollFunc, PULSE_TIME);
@@ -90,7 +90,7 @@ function autoScrollFunc(){
       //console.dir($pages);
       //console.dir($pages.last());
       //console.dir($pages.last().find("div.kix-paragraphrenderer"));
-      $currentPage = $pages.last().find("div.kix-paragraphrenderer").first();
+      $currentPage = $pages.last().find("div.kix-paragraphrenderer").parent();
       //console.dir($currentPage);
       //pageHeight = $pages.first().height();
       if(pageCount != oldCount){
@@ -109,14 +109,14 @@ function scrollToNewPosition(){
       var upperSection = toolbarHeight + getRulerHeight();
       var windowHeight = $(window).height();
       var marginHeight = (pageCount > 1) ? getTopMarginHeight() : firstMarginHeight;
-      var docViewHeight = (windowHeight > upperSection) ? (windowHeight - upperSection - marginHeight) : 0;
+      var docViewHeight = (windowHeight > upperSection) ? (windowHeight - upperSection) : 0;
 
       // calculate the scroll location
       var totalDocHeight = (pageHeight * (pageCount-1)) + $currentPage.height() + marginHeight;
-      viewLoc = (totalDocHeight < docViewHeight) ? 0 : totalDocHeight - docViewHeight;
+      viewLoc = (totalDocHeight < docViewHeight) ? 0 : totalDocHeight - docViewHeight + $currentPage.height();
 
-      //console.log("upperSection: %s, windowHeight: %s, marginHeight: %s, docViewHeight: %s, totalDocHeight: %s, viewLoc: %s, currentPage.height(): %s",
-      //      upperSection, windowHeight, marginHeight, docViewHeight, totalDocHeight, viewLoc, $currentPage.height());
+      console.log("upperSection: %s, windowHeight: %s, marginHeight: %s, docViewHeight: %s, totalDocHeight: %s, viewLoc: %s, currentPage.height(): %s",
+            upperSection, windowHeight, marginHeight, docViewHeight, totalDocHeight, viewLoc, $currentPage.height());
 
       if(oldHeight != viewLoc){
          // if there are changes in height, then scroll to the new position

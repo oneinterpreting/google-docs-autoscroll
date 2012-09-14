@@ -1,14 +1,14 @@
 {
   "name": "google-docs-autoscroll",
-  "version": "0.1",
-  "manifest_version": 1,
+  "version": "0.2",
+  "manifest_version": 2,
   "homepage_url": "http://code.google.com/p/google-docs-autoscroll/",
   "description": "Automatically follow on-screen a Google Drive Document as it's being edited.",
   "content_scripts": [
     {
       "matches": ["https://docs.google.com/document/d/*/edit*","https://docs.google.com/a/*/document/d/*/edit*"],
       "css": ["autoscroll.css"],
-      "js": ["jquery-1.7.2.min.js","autoscroll.js"]
+      "js": ["jquery-1.8.1.min.js","autoscroll.js"]
     }
   ]
 }
